@@ -1,0 +1,13 @@
+x-veld:
+  code:
+
+services:
+  veld_preprocess_lowercase:
+    build: .
+    volumes:
+      - ./src/:/veld/code/
+    command: python3 /veld/code/preprocess_lowercase.py
+    environment:
+      input_file_path: null
+      output_file_path: null
+
