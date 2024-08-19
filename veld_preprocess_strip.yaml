@@ -1,0 +1,15 @@
+x-veld:
+  code:
+
+services:
+  veld_preprocess_strip:
+    build: .
+    volumes:
+      - ./src/:/veld/code/
+    command: /veld/code/preprocess_strip.sh
+    environment:
+      input_file_path: null
+      output_file_path: null
+      line_start: null
+      line_end: null
+
