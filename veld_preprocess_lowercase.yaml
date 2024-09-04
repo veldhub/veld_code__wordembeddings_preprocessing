@@ -5,9 +5,9 @@ services:
   veld_preprocess_lowercase:
     build: .
     volumes:
-      - ./src/:/veld/code/
+      - ./src/:/veld/code/:z
     command: python3 /veld/code/preprocess_lowercase.py
     environment:
-      input_file_path: null
-      output_file_path: null
+      in_file: null
+      out_file: null
 
