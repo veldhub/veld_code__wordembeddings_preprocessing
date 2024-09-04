@@ -1,0 +1,14 @@
+x-veld:
+  code:
+
+services:
+  veld_preprocess_sample:
+    build: .
+    volumes:
+      - ./src/:/veld/code/:z
+    command: python3 /veld/code/preprocess_sample.py
+    environment:
+      in_file: null
+      out_file: null
+      percentage_sample: null
+
