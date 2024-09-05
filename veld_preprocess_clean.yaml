@@ -1,0 +1,15 @@
+x-veld:
+  code:
+
+services:
+  veld_preprocess_clean:
+    build: .
+    volumes:
+      - ./src/:/veld/code/:z
+    command: python3 /veld/code/preprocess_clean.py
+    environment:
+      in_file: null
+      out_file_clean: null
+      out_file_dirty: null
+      min_percentage_char: null
+
