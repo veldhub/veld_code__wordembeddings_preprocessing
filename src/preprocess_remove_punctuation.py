@@ -11,6 +11,7 @@ import yaml
 IN_TXT_PATH = "/veld/input/" + os.getenv("in_txt_file")
 OUT_TXT_PATH = "/veld/output/" + os.getenv("out_txt_file")
 OUT_VELD_DATA_YAML_PATH = "/veld/output/veld_data_removed_punctuation.yaml"
+OUT_DATA_DESCRIPTION = os.getenv("out_data_description")
 TMP_FILE_FOLDER = "/tmp"
 CPU_COUNT = os.getenv("cpu_count")
 if CPU_COUNT is None:
@@ -27,8 +28,7 @@ print(f"INFO_INTERVAL: {INFO_INTERVAL}")
 veld_data_yaml = {
     "x-veld": {
         "data": {
-            "description": "transformed json files, with their contents split into sentences, and"\
-                " all merged together into one txt file.",
+            "description": OUT_DATA_DESCRIPTION,
             "topics": "NLP",
             "contents": [
                 "training data",
@@ -82,7 +82,6 @@ def run_multi_process(index_start_end_list, tmp_file_list):
                 interval_index_list = get_interval_index_list(\
                     index_start_end[1] - index_start_end[0] + 1, INFO_INTERVAL)
                 interval_index_list = [i + index_start_end[0] for i in interval_index_list]
-                # print(p_id, interval_index_list)
                 for i, sentence in enumerate(f_in):
                     if i >= index_start_end[0] and i <= index_start_end[1]:
                         doc = nlp(sentence)
