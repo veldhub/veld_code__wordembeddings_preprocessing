@@ -112,6 +112,7 @@ def join_tmp_files(tmp_file_list):
         for tmp_file_path in tmp_file_list:
             with open(tmp_file_path, "r") as f_in:
                 f_out.write(f_in.read())
+    print("done")
 
 
 def write_veld_data_yaml():
