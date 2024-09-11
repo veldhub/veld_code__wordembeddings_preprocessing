@@ -18,6 +18,8 @@ if CPU_COUNT is None:
     CPU_COUNT = os.cpu_count()
 else:
     CPU_COUNT = int(CPU_COUNT)
+    if CPU_COUNT > os.cpu_count():
+        CPU_COUNT = os.cpu_count()
 INFO_INTERVAL = int(os.getenv("info_interval"))
 print(f"IN_TXT_PATH: {IN_TXT_PATH}")
 print(f"OUT_TXT_PATH: {OUT_TXT_PATH}")
