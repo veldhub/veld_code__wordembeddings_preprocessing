@@ -92,7 +92,7 @@ def run_multi_process(index_start_end_list, tmp_file_list):
                         sentence_cleaned = " ".join(token_non_punct)
                         f_out.write(sentence_cleaned)
                     if i in interval_index_list:
-                        print(f"process {p_id}: done with {i - index_start_end[0] + 1} sentences out"\
+                        print(f"process {p_id}: done with {i - index_start_end[0] + 1} lines out"\
                             f" of {index_start_end[1] - index_start_end[0] + 1}.", flush=True)
         print(f"process {p_id}: done", flush=True)
 
