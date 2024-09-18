@@ -21,10 +21,10 @@ else:
     if CPU_COUNT > os.cpu_count():
         CPU_COUNT = os.cpu_count()
 INFO_INTERVAL = int(os.getenv("info_interval"))
-print(f"IN_TXT_PATH: {IN_TXT_PATH}")
-print(f"OUT_TXT_PATH: {OUT_TXT_PATH}")
-print(f"CPU_COUNT: {CPU_COUNT}")
-print(f"INFO_INTERVAL: {INFO_INTERVAL}")
+print(f"IN_TXT_PATH: {IN_TXT_PATH}", flush=True)
+print(f"OUT_TXT_PATH: {OUT_TXT_PATH}", flush=True)
+print(f"CPU_COUNT: {CPU_COUNT}", flush=True)
+print(f"INFO_INTERVAL: {INFO_INTERVAL}", flush=True)
 
 
 veld_data_yaml = {
@@ -47,10 +47,10 @@ nlp = spacy.load("de_core_news_lg")
 
 
 def get_num_lines():
-    print("counting lines of file.")
+    print("counting lines of file.", flush=True)
     result = subprocess.run(["wc", "-l", IN_TXT_PATH], capture_output=True, text=True)
     num_lines = int(result.stdout.split()[0])
-    print(f"done. number of lines: {num_lines}")
+    print(f"done. number of lines: {num_lines}", flush=True)
     return num_lines
 
 
@@ -114,7 +114,7 @@ def join_tmp_files(tmp_file_list):
         for tmp_file_path in tmp_file_list:
             with open(tmp_file_path, "r") as f_in:
                 f_out.write(f_in.read())
-    print("done")
+    print("done", flush=True)
 
 
 def write_veld_data_yaml():

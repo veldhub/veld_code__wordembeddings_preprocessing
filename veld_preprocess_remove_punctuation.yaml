@@ -6,7 +6,7 @@ services:
     build: .
     volumes:
       - ./src/:/veld/code/:z
-    command: python3 /veld/code/preprocess_remove_punctuation.py
+    command: python3 -u /veld/code/preprocess_remove_punctuation.py
     environment:
       in_txt_file: null
       out_txt_file: null
