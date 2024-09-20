@@ -29,11 +29,13 @@ def print_and_log(msg):
 
 
 def get_line_indices():
+    print_and_log("counting lines")
     line_indices_list = []
     with open(IN_FILE_PATH, "r") as f_in:
         for i, line in enumerate(f_in):
             line_indices_list.append(i)
         print_and_log(f"total_line_count: {len(line_indices_list)}")
+    print_and_log("creating index list of random sample lines")
     absolute_sample = int((len(line_indices_list) / 100) * PERCENTAGE_SAMPLE)
     if SAMPLE_RANDOM_SEED is not None:
         random.seed(SAMPLE_RANDOM_SEED)
