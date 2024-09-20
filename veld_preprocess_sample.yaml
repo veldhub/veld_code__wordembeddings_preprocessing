@@ -11,5 +11,6 @@ services:
       in_file: null
       out_file: null
       percentage_sample: null
+      sample_random_seed: null
       buffer_segments: 10
 

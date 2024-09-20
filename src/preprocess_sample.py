@@ -10,6 +10,7 @@ IN_FILE_PATH = "/veld/input/" + os.getenv("in_file")
 OUT_FILE_PATH = "/veld/output/" + os.getenv("out_file")
 OUT_LOG_PATH = "/veld/output/log.txt"
 TMP_FILE_FOLDER = "/tmp"
+SAMPLE_RANDOM_SEED = os.getenv("sample_random_seed")
 PERCENTAGE_SAMPLE = float(os.getenv("percentage_sample"))
 CPU_COUNT = os.getenv("cpu_count")
 BUFFER_SEGMENTS = int(os.getenv("buffer_segments"))
@@ -34,6 +35,8 @@ def get_line_indices():
             line_indices_list.append(i)
         print_and_log(f"total_line_count: {len(line_indices_list)}")
     absolute_sample = int((len(line_indices_list) / 100) * PERCENTAGE_SAMPLE)
+    if SAMPLE_RANDOM_SEED is not None:
+        random.seed(SAMPLE_RANDOM_SEED)
     rand_indices = sorted(random.sample(line_indices_list, absolute_sample))
     print_and_log(f"number of randomly sampled lines: {len(rand_indices)}")
     return rand_indices
@@ -68,6 +71,7 @@ def single_process(p_id, individual_list):
                             f"process {p_id}: picked {count_picked} lines, out of {count_to_pick}"
                         )
                     if len(rand_index_set) == 0:
+                        print_and_log(f"process {p_id}: done")
                         break
 
 
@@ -126,6 +130,8 @@ def main():
     print_and_log(f"starting at: {datetime.now()}")
     print_and_log(f"IN_FILE_PATH: {IN_FILE_PATH}")
     print_and_log(f"OUT_FILE_PATH: {OUT_FILE_PATH}")
+    print_and_log(f"CPU_COUNT: {CPU_COUNT}")
+    print_and_log(f"SAMPLE_RANDOM_SEED: {SAMPLE_RANDOM_SEED}")
     print_and_log(f"PERCENTAGE_SAMPLE: {PERCENTAGE_SAMPLE}")
     print_and_log(f"BUFFER_SEGMENTS: {BUFFER_SEGMENTS}")
     rand_indices_list = get_line_indices()
