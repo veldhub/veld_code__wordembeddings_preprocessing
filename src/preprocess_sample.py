@@ -70,7 +70,8 @@ def single_process(p_id, individual_list):
                         f_out.write(buffer_out_str)
                         buffer_out_str = ""
                         print_and_log(
-                            f"process {p_id}: picked {count_picked} lines, out of {count_to_pick}"
+                            f"process {p_id}: picked {count_picked} lines, out of {count_to_pick}, "
+                            f"currently at line {line_count}"
                         )
                     if len(rand_index_set) == 0:
                         print_and_log(f"process {p_id}: done")
