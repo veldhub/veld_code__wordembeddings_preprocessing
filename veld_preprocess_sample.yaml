@@ -11,4 +11,5 @@ services:
       in_file: null
       out_file: null
       percentage_sample: null
+      buffer_segments: 10
 
