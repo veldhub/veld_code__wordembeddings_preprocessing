@@ -33,7 +33,6 @@ def get_line_indices():
         for i, line in enumerate(f_in):
             line_indices_list.append(i)
         print_and_log(f"total_line_count: {len(line_indices_list)}")
-
     absolute_sample = int((len(line_indices_list) / 100) * PERCENTAGE_SAMPLE)
     rand_indices = sorted(random.sample(line_indices_list, absolute_sample))
     print_and_log(f"number of randomly sampled lines: {len(rand_indices)}")
@@ -41,32 +40,35 @@ def get_line_indices():
 
 
 def single_process(p_id, individual_list):
+    i_start = individual_list[0]
+    rand_index_set = set(individual_list)
     out_tmp_file_path = f"{TMP_FILE_FOLDER}/{p_id}.txt"
-    buffer_segment_step = math.ceil(len(individual_list) / BUFFER_SEGMENTS)
+    buffer_segment_step = math.ceil(len(rand_index_set) / BUFFER_SEGMENTS)
     with open(IN_FILE_PATH, "r") as f_in:
         with open(out_tmp_file_path, "w") as f_out:
-            count_to_pick = len(individual_list)
+            count_to_pick = len(rand_index_set)
             count_picked = 0
             buffer_out_str = ""
             for line_count, line in enumerate(f_in):
-                if line_count == individual_list[0]:
-                    count_picked += 1
-                    buffer_out_str += line
-                    del individual_list[0]
-                if (
-                    line_count != 0 
-                    and (
-                        line_count % buffer_segment_step == 0 
-                        or count_picked == count_to_pick
-                    )
-                ):
-                    f_out.write(buffer_out_str)
-                    buffer_out_str = ""
-                    print_and_log(
-                        f"process {p_id}: done with {count_picked} files, out of {count_to_pick}"
-                    )
-                if individual_list == []:
-                    break
+                if line_count >= i_start:
+                    if line_count in rand_index_set:
+                        count_picked += 1
+                        buffer_out_str += line
+                        rand_index_set.remove(line_count)
+                    if (
+                        line_count != 0 
+                        and (
+                            line_count % buffer_segment_step == 0 
+                            or count_picked == count_to_pick
+                        )
+                    ):
+                        f_out.write(buffer_out_str)
+                        buffer_out_str = ""
+                        print_and_log(
+                            f"process {p_id}: picked {count_picked} lines, out of {count_to_pick}"
+                        )
+                    if len(rand_index_set) == 0:
+                        break
 
 
 def multi_process(cpu_cores, global_list, single_process_function):
@@ -121,9 +123,11 @@ def main():
         os.remove(OUT_LOG_PATH)
     except:
         pass
+    print_and_log(f"starting at: {datetime.now()}")
     print_and_log(f"IN_FILE_PATH: {IN_FILE_PATH}")
     print_and_log(f"OUT_FILE_PATH: {OUT_FILE_PATH}")
     print_and_log(f"PERCENTAGE_SAMPLE: {PERCENTAGE_SAMPLE}")
+    print_and_log(f"BUFFER_SEGMENTS: {BUFFER_SEGMENTS}")
     rand_indices_list = get_line_indices()
     multi_process(
         cpu_cores=CPU_COUNT, 
