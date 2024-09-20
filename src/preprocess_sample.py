@@ -56,26 +56,28 @@ def single_process(p_id, individual_list):
             buffer_out_str = ""
             for line_count, line in enumerate(f_in):
                 if line_count >= i_start:
-                    if line_count in rand_index_set:
-                        count_picked += 1
-                        buffer_out_str += line
-                        rand_index_set.remove(line_count)
-                    if (
-                        line_count != 0 
-                        and (
-                            line_count % buffer_segment_step == 0 
-                            or count_picked == count_to_pick
-                        )
-                    ):
-                        f_out.write(buffer_out_str)
-                        buffer_out_str = ""
-                        print_and_log(
-                            f"process {p_id}: picked {count_picked} lines, out of {count_to_pick}, "
-                            f"currently at line {line_count}"
-                        )
-                    if len(rand_index_set) == 0:
-                        print_and_log(f"process {p_id}: done")
-                        break
+                    print(p_id)
+                    break
+                    # if line_count in rand_index_set:
+                    #     count_picked += 1
+                    #     buffer_out_str += line
+                    #     rand_index_set.remove(line_count)
+                    # if (
+                    #     line_count != 0 
+                    #     and (
+                    #         line_count % buffer_segment_step == 0 
+                    #         or count_picked == count_to_pick
+                    #     )
+                    # ):
+                    #     f_out.write(buffer_out_str)
+                    #     buffer_out_str = ""
+                    #     print_and_log(
+                    #         f"process {p_id}: picked {count_picked} lines, out of {count_to_pick}, "
+                    #         f"currently at line {line_count}"
+                    #     )
+                    # if len(rand_index_set) == 0:
+                    #     print_and_log(f"process {p_id}: done")
+                    #     break
 
 
 def multi_process(cpu_cores, global_list, single_process_function):
