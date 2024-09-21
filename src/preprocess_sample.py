@@ -45,6 +45,7 @@ def get_line_indices():
 
 
 def single_process(p_id, individual_list):
+    print(p_id)
     i_start = individual_list[0]
     rand_index_set = set(individual_list)
     out_tmp_file_path = f"{TMP_FILE_FOLDER}/{p_id}.txt"
