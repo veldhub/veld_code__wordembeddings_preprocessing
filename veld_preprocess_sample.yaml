@@ -10,6 +10,7 @@ services:
     environment:
       in_file: null
       out_file: null
+      out_data_description: null
       cpu_count: null
       percentage_sample: null
       sample_random_seed: null

@@ -3,13 +3,17 @@ import os
 import random
 import subprocess
 from datetime import datetime
-from multiprocessing import Process
-from time import sleep
+
+import yaml
+
+from common import multi_process
 
 
 IN_FILE_PATH = "/veld/input/" + os.getenv("in_file")
 OUT_FILE_PATH = "/veld/output/" + os.getenv("out_file")
+OUT_DATA_DESCRIPTION = os.getenv("out_data_description")
 OUT_LOG_PATH = "/veld/output/log.txt"
+OUT_VELD_DATA_YAML_PATH = "/veld/output/veld_data_sampled.yaml"
 TMP_FILE_FOLDER = "/tmp"
 SAMPLE_RANDOM_SEED = os.getenv("sample_random_seed")
 PERCENTAGE_SAMPLE = float(os.getenv("percentage_sample"))
@@ -80,41 +84,27 @@ def single_process(p_id, individual_list):
                         break
 
 
-def multi_process(cpu_cores, global_list, single_process_function, sleep_duration=0):
-
-    def get_segment_index_list(list_len, num_segment):
-        segment_index_list = []
-        step = list_len // num_segment
-        i_start = 0
-        for i_segment in range(1, num_segment + 1):
-            if i_segment < num_segment:
-                i_end = i_segment * step
-                segment_index_list.append((i_start, i_end))
-                i_start = i_end
-            else:
-                segment_index_list.append((i_start, list_len))
-        return segment_index_list
-
-    def multi_process_main():
-        segment_index_list = get_segment_index_list(len(global_list), cpu_cores)
-        process_list = []
-        for p_id, i_start_end_tuple in enumerate(segment_index_list):
-            print_and_log(
-                f"process id {p_id}: assigned to indices from {i_start_end_tuple[0]} to "
-                f"{i_start_end_tuple[1] - 1}"
-            )
-            sub_list = global_list[i_start_end_tuple[0]:i_start_end_tuple[1]]
-            process = Process(target=single_process_function, args=(p_id, sub_list))
-            process.start()
-            # when dealing with big data objects, some processes are not instantiated; perhaps due
-            # to race conditions between process invocation data memory handling. Adding a sleep 
-            # here is a work-around to this issue.
-            sleep(sleep_duration)
-            process_list.append(process)
-        for process in process_list:
-            process.join()
-
-    multi_process_main()
+def write_veld_data_yaml(data_size):
+    veld_data_yaml = {
+        "x-veld": {
+            "data": {
+                "description": OUT_DATA_DESCRIPTION,
+                "topics": "NLP",
+                "contents": [
+                    "training data",
+                    "raw text",
+                ],
+                "file_type": "json",
+                "additional": {
+                    "data size": data_size,
+                    "percentage_sample": PERCENTAGE_SAMPLE,
+                    "sample_random_seed": SAMPLE_RANDOM_SEED,
+                }
+            }
+        }
+    }
+    with open(OUT_VELD_DATA_YAML_PATH, "w") as f:
+        yaml.dump(veld_data_yaml, f, sort_keys=False)
 
 
 def join_tmp_files():
@@ -125,10 +115,8 @@ def join_tmp_files():
                 f_out.write(f_in.read())
     result = subprocess.run(["du", "-sh", OUT_FILE_PATH], capture_output=True, text=True)
     data_size = result.stdout.split()[0]
-    # veld_data_yaml["x-veld"]["data"]["additional"]["data size"] = data_size
+    write_veld_data_yaml(data_size)
     print_and_log(f"done. Size of data: {data_size}")
-    # with open(OUT_VELD_DATA_YAML_PATH, "w") as f:
-    #     yaml.dump(veld_data_yaml, f, sort_keys=False)
 
 
 def main():
