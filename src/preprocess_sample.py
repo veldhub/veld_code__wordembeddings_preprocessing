@@ -84,7 +84,9 @@ def single_process(p_id, individual_list):
                         break
 
 
-def write_veld_data_yaml(data_size):
+def write_veld_data_yaml():
+    result = subprocess.run(["du", "-sh", OUT_FILE_PATH], capture_output=True, text=True)
+    data_size = result.stdout.split()[0]
     veld_data_yaml = {
         "x-veld": {
             "data": {
@@ -113,10 +115,6 @@ def join_tmp_files():
         for tmp_file_path in [TMP_FILE_FOLDER + "/" + f for f in os.listdir(TMP_FILE_FOLDER)]:
             with open(tmp_file_path, "r") as f_in:
                 f_out.write(f_in.read())
-    result = subprocess.run(["du", "-sh", OUT_FILE_PATH], capture_output=True, text=True)
-    data_size = result.stdout.split()[0]
-    write_veld_data_yaml(data_size)
-    print_and_log(f"done. Size of data: {data_size}")
 
 
 def main():
@@ -139,6 +137,7 @@ def main():
         sleep_duration=60,
     )
     join_tmp_files()
+    write_veld_data_yaml()
     print_and_log(f"done at: {datetime.now()}")
 
 
