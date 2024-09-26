@@ -46,42 +46,34 @@ def get_line_indices():
         random.seed(SAMPLE_RANDOM_SEED)
     rand_indices = sorted(random.sample(line_indices_list, absolute_sample))
     print_and_log(f"number of randomly sampled lines: {len(rand_indices)}")
-    return rand_indices
+    return set(rand_indices)
 
 
-def single_process(p_id, individual_list):
-    print(f"process {p_id}: start")
-    i_start = individual_list[0]
-    rand_index_set = set(individual_list)
-    out_tmp_file_path = f"{TMP_FILE_FOLDER}/{p_id}.txt"
-    buffer_segment_step = math.ceil(len(rand_index_set) / BUFFER_SEGMENTS)
+def create_sample(rand_indices_set):
+    count_to_pick = len(rand_indices_set)
+    count_picked = 0
+    buffer_out_str = ""
+    buffer_segment_step = math.ceil(count_to_pick / BUFFER_SEGMENTS)
     with open(IN_FILE_PATH, "r") as f_in:
-        with open(out_tmp_file_path, "w") as f_out:
-            count_to_pick = len(rand_index_set)
-            count_picked = 0
-            buffer_out_str = ""
+        with open(OUT_FILE_PATH, "w") as f_out:
             for line_count, line in enumerate(f_in):
-                if line_count >= i_start:
-                    if line_count in rand_index_set:
-                        count_picked += 1
-                        buffer_out_str += line
-                        rand_index_set.remove(line_count)
-                    if (
-                        line_count != i_start 
-                        and (
-                            (line_count - i_start) % buffer_segment_step == 0 
-                            or count_picked == count_to_pick
-                        )
-                    ):
-                        f_out.write(buffer_out_str)
-                        buffer_out_str = ""
-                        print_and_log(
-                            f"process {p_id}: picked {count_picked} lines, out of {count_to_pick}, "
-                            f"currently at line {line_count}"
-                        )
-                    if len(rand_index_set) == 0:
-                        print_and_log(f"process {p_id}: done")
-                        break
+                if line_count in rand_indices_set:
+                    rand_indices_set.remove(line_count)
+                    count_picked += 1
+                    buffer_out_str += line
+                if (
+                    line_count != 0
+                    and (
+                        line_count % buffer_segment_step == 0 
+                        or count_picked == count_to_pick
+                    )
+                ):
+                    f_out.write(buffer_out_str)
+                    buffer_out_str = ""
+                    print_and_log(f"picked {count_picked} lines, out of {count_to_pick}")
+                if len(rand_indices_set) == 0:
+                    print_and_log("done")
+                    break
 
 
 def write_veld_data_yaml():
@@ -109,13 +101,6 @@ def write_veld_data_yaml():
         yaml.dump(veld_data_yaml, f, sort_keys=False)
 
 
-def join_tmp_files():
-    print_and_log("joining tmp files into one.")
-    with open(OUT_FILE_PATH, "w") as f_out:
-        for tmp_file_path in [TMP_FILE_FOLDER + "/" + f for f in os.listdir(TMP_FILE_FOLDER)]:
-            with open(tmp_file_path, "r") as f_in:
-                f_out.write(f_in.read())
-
 
 def main():
     try:
@@ -129,14 +114,8 @@ def main():
     print_and_log(f"SAMPLE_RANDOM_SEED: {SAMPLE_RANDOM_SEED}")
     print_and_log(f"PERCENTAGE_SAMPLE: {PERCENTAGE_SAMPLE}")
     print_and_log(f"BUFFER_SEGMENTS: {BUFFER_SEGMENTS}")
-    rand_indices_list = get_line_indices()
-    multi_process(
-        cpu_cores=CPU_COUNT, 
-        global_list=rand_indices_list, 
-        single_process_function=single_process,
-        sleep_duration=60,
-    )
-    join_tmp_files()
+    rand_indices_set = get_line_indices()
+    create_sample(rand_indices_set)
     write_veld_data_yaml()
     print_and_log(f"done at: {datetime.now()}")
 

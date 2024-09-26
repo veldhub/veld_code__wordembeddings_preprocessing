@@ -14,5 +14,5 @@ services:
       cpu_count: null
       percentage_sample: null
       sample_random_seed: null
-      buffer_segments: 10
+      buffer_segments: 100
 
