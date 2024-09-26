@@ -4,6 +4,7 @@ import random
 import subprocess
 from datetime import datetime
 from multiprocessing import Process
+from time import sleep
 
 
 IN_FILE_PATH = "/veld/input/" + os.getenv("in_file")
@@ -12,8 +13,8 @@ OUT_LOG_PATH = "/veld/output/log.txt"
 TMP_FILE_FOLDER = "/tmp"
 SAMPLE_RANDOM_SEED = os.getenv("sample_random_seed")
 PERCENTAGE_SAMPLE = float(os.getenv("percentage_sample"))
-CPU_COUNT = os.getenv("cpu_count")
 BUFFER_SEGMENTS = int(os.getenv("buffer_segments"))
+CPU_COUNT = os.getenv("cpu_count")
 if CPU_COUNT is None:
     CPU_COUNT = os.cpu_count()
 else:
@@ -45,7 +46,7 @@ def get_line_indices():
 
 
 def single_process(p_id, individual_list):
-    print(p_id)
+    print(f"process {p_id}: start")
     i_start = individual_list[0]
     rand_index_set = set(individual_list)
     out_tmp_file_path = f"{TMP_FILE_FOLDER}/{p_id}.txt"
@@ -57,31 +58,29 @@ def single_process(p_id, individual_list):
             buffer_out_str = ""
             for line_count, line in enumerate(f_in):
                 if line_count >= i_start:
-                    print(p_id)
-                    break
-                    # if line_count in rand_index_set:
-                    #     count_picked += 1
-                    #     buffer_out_str += line
-                    #     rand_index_set.remove(line_count)
-                    # if (
-                    #     line_count != 0 
-                    #     and (
-                    #         line_count % buffer_segment_step == 0 
-                    #         or count_picked == count_to_pick
-                    #     )
-                    # ):
-                    #     f_out.write(buffer_out_str)
-                    #     buffer_out_str = ""
-                    #     print_and_log(
-                    #         f"process {p_id}: picked {count_picked} lines, out of {count_to_pick}, "
-                    #         f"currently at line {line_count}"
-                    #     )
-                    # if len(rand_index_set) == 0:
-                    #     print_and_log(f"process {p_id}: done")
-                    #     break
+                    if line_count in rand_index_set:
+                        count_picked += 1
+                        buffer_out_str += line
+                        rand_index_set.remove(line_count)
+                    if (
+                        line_count != i_start 
+                        and (
+                            (line_count - i_start) % buffer_segment_step == 0 
+                            or count_picked == count_to_pick
+                        )
+                    ):
+                        f_out.write(buffer_out_str)
+                        buffer_out_str = ""
+                        print_and_log(
+                            f"process {p_id}: picked {count_picked} lines, out of {count_to_pick}, "
+                            f"currently at line {line_count}"
+                        )
+                    if len(rand_index_set) == 0:
+                        print_and_log(f"process {p_id}: done")
+                        break
 
 
-def multi_process(cpu_cores, global_list, single_process_function):
+def multi_process(cpu_cores, global_list, single_process_function, sleep_duration=0):
 
     def get_segment_index_list(list_len, num_segment):
         segment_index_list = []
@@ -105,9 +104,13 @@ def multi_process(cpu_cores, global_list, single_process_function):
                 f"{i_start_end_tuple[1] - 1}"
             )
             sub_list = global_list[i_start_end_tuple[0]:i_start_end_tuple[1]]
-            process_list.append(Process(target=single_process_function, args=(p_id, sub_list)))
-        for process in process_list:
+            process = Process(target=single_process_function, args=(p_id, sub_list))
             process.start()
+            # when dealing with big data objects, some processes are not instantiated; perhaps due
+            # to race conditions between process invocation data memory handling. Adding a sleep 
+            # here is a work-around to this issue.
+            sleep(sleep_duration)
+            process_list.append(process)
         for process in process_list:
             process.join()
 
@@ -144,7 +147,8 @@ def main():
     multi_process(
         cpu_cores=CPU_COUNT, 
         global_list=rand_indices_list, 
-        single_process_function=single_process
+        single_process_function=single_process,
+        sleep_duration=60,
     )
     join_tmp_files()
     print_and_log(f"done at: {datetime.now()}")

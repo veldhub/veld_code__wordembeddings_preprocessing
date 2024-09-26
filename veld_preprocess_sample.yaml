@@ -10,6 +10,7 @@ services:
     environment:
       in_file: null
       out_file: null
+      cpu_count: null
       percentage_sample: null
       sample_random_seed: null
       buffer_segments: 10
