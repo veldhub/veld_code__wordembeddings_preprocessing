@@ -88,7 +88,7 @@ def write_veld_data_yaml():
                     "training data",
                     "raw text",
                 ],
-                "file_type": "json",
+                "file_type": "txt",
                 "additional": {
                     "data size": data_size,
                     "percentage_sample": PERCENTAGE_SAMPLE,
