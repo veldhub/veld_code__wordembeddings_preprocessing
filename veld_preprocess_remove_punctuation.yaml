@@ -11,6 +11,6 @@ services:
       in_txt_file: null
       out_txt_file: null
       cpu_count: null
-      info_interval: 100
+      buffer_segments: 10
       out_data_description: null
 
