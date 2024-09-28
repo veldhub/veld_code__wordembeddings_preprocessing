@@ -24,7 +24,8 @@ def make_lowercase():
 def write_veld_data_yaml():
     result = subprocess.run(["du", "-sh", OUT_TXT_PATH], capture_output=True, text=True)
     data_size = result.stdout.split()[0]
-    print(f"data size: {data_size}")
+    result = subprocess.run(["wc", "-l", OUT_TXT_PATH], capture_output=True, text=True)
+    num_lines = result.stdout.split()[0]
     veld_data_yaml = {
         "x-veld": {
             "data": {
@@ -37,6 +38,7 @@ def write_veld_data_yaml():
                 "file_type": "txt",
                 "additional": {
                     "data size": data_size,
+                    "number of lines": num_lines,
                 }
             }
         }
@@ -46,7 +48,11 @@ def write_veld_data_yaml():
         yaml.dump(veld_data_yaml, f, sort_keys=False)
 
 
-if __name__ == "__main__":
+def main():
     make_lowercase()
     write_veld_data_yaml()
+
+
+if __name__ == "__main__":
+    main()
 

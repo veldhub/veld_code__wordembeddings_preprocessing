@@ -24,9 +24,21 @@ BUFFER_SEGMENTS = int(os.getenv("buffer_segments"))
 nlp = spacy.load("de_core_news_lg")
 
 
+def process_line(line):
+    doc = nlp(line)
+    token_non_punct = []
+    for token in doc:
+        if not token.is_punct:
+            token_non_punct.append(token.text)
+    sentence_cleaned = " ".join(token_non_punct)
+    return sentence_cleaned
+
+
 def write_veld_data_yaml():
     result = subprocess.run(["du", "-sh", OUT_TXT_PATH], capture_output=True, text=True)
     data_size = result.stdout.split()[0]
+    result = subprocess.run(["wc", "-l", OUT_TXT_PATH], capture_output=True, text=True)
+    num_lines = result.stdout.split()[0]
     veld_data_yaml = {
         "x-veld": {
             "data": {
@@ -39,22 +51,13 @@ def write_veld_data_yaml():
                 "file_type": "txt",
                 "additional": {
                     "data size": data_size,
+                    "number of lines": num_lines,
                 }
             }
         }
     }
     with open(OUT_VELD_DATA_YAML_PATH, "w") as f:
         yaml.dump(veld_data_yaml, f, sort_keys=False)
-
-
-def process_line(line):
-    doc = nlp(line)
-    token_non_punct = []
-    for token in doc:
-        if not token.is_punct:
-            token_non_punct.append(token.text)
-    sentence_cleaned = " ".join(token_non_punct)
-    return sentence_cleaned
 
 
 def main():

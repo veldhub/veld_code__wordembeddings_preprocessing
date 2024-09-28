@@ -71,6 +71,8 @@ def create_sample(rand_indices_set):
 def write_veld_data_yaml():
     result = subprocess.run(["du", "-sh", OUT_FILE_PATH], capture_output=True, text=True)
     data_size = result.stdout.split()[0]
+    result = subprocess.run(["wc", "-l", OUT_FILE_PATH], capture_output=True, text=True)
+    num_lines = result.stdout.split()[0]
     veld_data_yaml = {
         "x-veld": {
             "data": {
@@ -83,6 +85,7 @@ def write_veld_data_yaml():
                 "file_type": "txt",
                 "additional": {
                     "data size": data_size,
+                    "number of lines": num_lines,
                     "percentage_sample": PERCENTAGE_SAMPLE,
                     "sample_random_seed": SAMPLE_RANDOM_SEED,
                 }

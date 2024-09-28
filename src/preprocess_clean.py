@@ -57,7 +57,9 @@ def write_veld_data_yaml():
     result = subprocess.run(["du", "-sh", OUTPUT_FILE_CLEAN_PATH], capture_output=True, text=True)
     data_size = result.stdout.split()[0]
     result = subprocess.run(["wc", "-l", OUTPUT_FILE_CLEAN_PATH], capture_output=True, text=True)
-    num_lines = result.stdout.split()[0]
+    num_lines_cleaned = result.stdout.split()[0]
+    result = subprocess.run(["wc", "-l", OUTPUT_FILE_CLEAN_PATH], capture_output=True, text=True)
+    num_lines_dirty = result.stdout.split()[0]
     veld_data_yaml = {
         "x-veld": {
             "data": {
@@ -71,7 +73,9 @@ def write_veld_data_yaml():
                 "path": "data.txt",
                 "additional": {
                     "data size": data_size,
-                    "number of lines": num_lines,
+                    "number of clean lines": num_lines_cleaned,
+                    "number of dirty removed lines": num_lines_dirty,
+                    "minimum number of characters in percentage of each line": MIN_PERCENTAGE_CHAR
                 }
             }
         }
