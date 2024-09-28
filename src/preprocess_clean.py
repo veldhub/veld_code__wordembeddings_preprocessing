@@ -58,7 +58,7 @@ def write_veld_data_yaml():
     data_size = result.stdout.split()[0]
     result = subprocess.run(["wc", "-l", OUTPUT_FILE_CLEAN_PATH], capture_output=True, text=True)
     num_lines_cleaned = result.stdout.split()[0]
-    result = subprocess.run(["wc", "-l", OUTPUT_FILE_CLEAN_PATH], capture_output=True, text=True)
+    result = subprocess.run(["wc", "-l", OUTPUT_FILE_DIRTY_PATH], capture_output=True, text=True)
     num_lines_dirty = result.stdout.split()[0]
     veld_data_yaml = {
         "x-veld": {
