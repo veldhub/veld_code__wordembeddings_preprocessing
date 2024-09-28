@@ -19,6 +19,7 @@ def multi_process(
         print("counting lines of file.")
         result = subprocess.run(["wc", "-l", in_file_path], capture_output=True, text=True)
         num_lines = int(result.stdout.split()[0])
+        print(f"input file has {num_lines} lines")
         return num_lines
 
     def get_segment_index_list(list_len, num_segment):

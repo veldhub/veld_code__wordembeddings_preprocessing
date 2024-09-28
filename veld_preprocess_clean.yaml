@@ -12,4 +12,7 @@ services:
       out_file_clean: null
       out_file_dirty: null
       min_percentage_char: null
+      out_data_description: null
+      cpu_count: null
+      buffer_segments: null
 
