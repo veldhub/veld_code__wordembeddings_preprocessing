@@ -1,8 +1,5 @@
-import json
-import random
 import os
 import subprocess
-import multiprocessing
 
 import spacy
 import yaml
@@ -14,7 +11,6 @@ IN_TXT_PATH = "/veld/input/" + os.getenv("in_txt_file")
 OUT_TXT_PATH = "/veld/output/" + os.getenv("out_txt_file")
 OUT_VELD_DATA_YAML_PATH = "/veld/output/veld_data_removed_punctuation.yaml"
 OUT_DATA_DESCRIPTION = os.getenv("out_data_description")
-TMP_FILE_FOLDER = "/tmp"
 CPU_COUNT = os.getenv("cpu_count")
 if CPU_COUNT is None:
     CPU_COUNT = os.cpu_count()
@@ -26,12 +22,6 @@ BUFFER_SEGMENTS = int(os.getenv("buffer_segments"))
 
 
 nlp = spacy.load("de_core_news_lg")
-
-
-def print_and_log(msg):
-    print(msg, flush=True)
-    with open("/tmp/log.txt", "a") as out:
-        out.write(msg + "\n")
 
 
 def write_veld_data_yaml():
@@ -68,6 +58,10 @@ def process_line(line):
 
 
 def main():
+    print(f"IN_TXT_PATH: {IN_TXT_PATH}")
+    print(f"OUT_TXT_PATH: {OUT_TXT_PATH}")
+    print(f"CPU_COUNT: {CPU_COUNT}")
+    print(f"BUFFER_SEGMENTS: {BUFFER_SEGMENTS}")
     multi_process(
         cpu_cores=CPU_COUNT, 
         in_file_path=IN_TXT_PATH,
@@ -80,9 +74,5 @@ def main():
 
 
 if __name__ == "__main__":
-    print_and_log(f"IN_TXT_PATH: {IN_TXT_PATH}")
-    print_and_log(f"OUT_TXT_PATH: {OUT_TXT_PATH}")
-    print_and_log(f"CPU_COUNT: {CPU_COUNT}")
-    print_and_log(f"BUFFER_SEGMENTS: {BUFFER_SEGMENTS}")
     main()
 
