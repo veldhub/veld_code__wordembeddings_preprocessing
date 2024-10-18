@@ -10,6 +10,7 @@ def multi_process(
     cpu_cores, 
     in_file_path, 
     out_file_path, 
+    out_tmp_folder,
     single_line_function, 
     buffer_segments, 
     sleep_duration=0
@@ -37,11 +38,16 @@ def multi_process(
 
     def single_process(p_id, i_start, i_end):
         print(f"process {p_id}: start")
-        out_tmp_file_path = f"/tmp/{p_id}.txt"
+        out_tmp_file_path = f"{out_tmp_folder}/{p_id}.txt"
+        out_tmp_i_end_path = f"{out_tmp_folder}/{p_id}_i_end.txt"
         i_buffer_list = get_segment_index_list(i_end - i_start, buffer_segments)
         i_buffer_set = set(s[1] + i_start for s in i_buffer_list)
+        if os.path.exists(out_tmp_i_end_path):
+            with open(out_tmp_i_end_path, "r") as f_i_end:
+                i_start = int(f_i_end.read())
+                print(f"process {p_id}: found previous start index: {i_start}")
         with open(in_file_path, "r") as f_in:
-            with open(out_tmp_file_path, "w") as f_out:
+            with open(out_tmp_file_path, "a") as f_out:
                 buffer_out_str = ""
                 for i_line, line in enumerate(f_in):
                     if i_line >= i_start:
@@ -53,6 +59,8 @@ def multi_process(
                                 f"process {p_id}: processing currently at line {i_line}, until "
                                 f"{i_end - 1}"
                             )
+                            with open(out_tmp_i_end_path, "w") as f_i_end:
+                                f_i_end.write(str(i_line))
                         if i_line == i_end - 1:
                             print(f"process {p_id}: done")
                             break
@@ -60,9 +68,12 @@ def multi_process(
     def join_tmp_files():
         print("joining tmp files into one.")
         with open(out_file_path, "w") as f_out:
-            for tmp_file_path in ["/tmp/" + f for f in os.listdir("/tmp/")]:
-                with open(tmp_file_path, "r") as f_in:
-                    f_out.write(f_in.read())
+            for tmp_file_path in [out_tmp_folder + "/" + f for f in os.listdir(out_tmp_folder)]:
+                if not tmp_file_path.endswith("_i_end.txt"):
+                    print(f"writing content from {tmp_file_path}")
+                    with open(tmp_file_path, "r") as f_in:
+                        for line in f_in:
+                            f_out.write(line)
 
     def multi_process_main():
         print(f"start multiprocessing, at {datetime.now()}")
