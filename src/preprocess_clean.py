@@ -8,8 +8,10 @@ from common import multi_process
 
 
 INPUT_FILE_PATH = "/veld/input/" + os.getenv("in_file")
-OUTPUT_FILE_CLEAN_PATH = "/veld/output/" + os.getenv("out_file_clean")
-OUTPUT_FILE_DIRTY_PATH = "/veld/output/" + os.getenv("out_file_dirty")
+OUTPUT_FILE_CLEAN_PATH = "/veld/output/1/" + os.getenv("out_file_clean")
+OUTPUT_FILE_DIRTY_PATH = "/veld/output/1/" + os.getenv("out_file_dirty")
+OUT_TMP_FOLDER_CLEAN = "/veld/output/2/clean/"
+OUT_TMP_FOLDER_DIRTY = "/veld/output/2/dirty/"
 OUT_VELD_DATA_YAML_PATH = "/veld/output/veld_data_cleaned.yaml"
 MIN_PERCENTAGE_CHAR = float(os.getenv("min_percentage_char"))
 OUT_DATA_DESCRIPTION = os.getenv("out_data_description")
@@ -54,12 +56,12 @@ def process_line_dirty(line):
 
 
 def write_veld_data_yaml():
-    result = subprocess.run(["du", "-sh", OUTPUT_FILE_CLEAN_PATH], capture_output=True, text=True)
-    data_size = result.stdout.split()[0]
-    result = subprocess.run(["wc", "-l", OUTPUT_FILE_CLEAN_PATH], capture_output=True, text=True)
-    num_lines_cleaned = result.stdout.split()[0]
-    result = subprocess.run(["wc", "-l", OUTPUT_FILE_DIRTY_PATH], capture_output=True, text=True)
-    num_lines_dirty = result.stdout.split()[0]
+    data_size = subprocess.run(["du", "-sh", OUTPUT_FILE_CLEAN_PATH], capture_output=True, text=True)
+    data_size = data_size.stdout.split()[0]
+    num_lines_cleaned = subprocess.run(["wc", "-l", OUTPUT_FILE_CLEAN_PATH], capture_output=True, text=True)
+    num_lines_cleaned = num_lines_cleaned.stdout.split()[0]
+    num_lines_dirty = subprocess.run(["wc", "-l", OUTPUT_FILE_DIRTY_PATH], capture_output=True, text=True)
+    num_lines_dirty = num_lines_dirty.stdout.split()[0]
     veld_data_yaml = {
         "x-veld": {
             "data": {
@@ -94,15 +96,19 @@ def main():
         cpu_cores=CPU_COUNT, 
         in_file_path=INPUT_FILE_PATH,
         out_file_path=OUTPUT_FILE_CLEAN_PATH,
+        out_tmp_folder=OUT_TMP_FOLDER_CLEAN,
         single_line_function=process_line_clean,
         buffer_segments=BUFFER_SEGMENTS,
+        sleep_duration=60,
     )
     multi_process(
         cpu_cores=CPU_COUNT, 
         in_file_path=INPUT_FILE_PATH,
         out_file_path=OUTPUT_FILE_DIRTY_PATH,
+        out_tmp_folder=OUT_TMP_FOLDER_DIRTY,
         single_line_function=process_line_dirty,
         buffer_segments=BUFFER_SEGMENTS,
+        sleep_duration=60,
     )
     write_veld_data_yaml()
 
