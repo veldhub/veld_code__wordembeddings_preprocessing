@@ -1,5 +1,48 @@
 x-veld:
   code:
+    description: "Removes lines that don't reach a threshold regarding the ratio of textual content
+      to non-textual (numbers, special characters) content. Splits output into clean and dirty
+      file."
+    topics: 
+      - "NLP"
+      - "preprocessing"
+      - "ETL"
+
+    inputs:
+      - volume: /veld/input/
+        environment: in_file
+        file_type: "txt"
+        contents: "raw text"
+
+    outputs:
+      - volume: /veld/output/
+        environment: out_file_clean
+        description: "clean lines, where each line's ratio is above the configured threshold"
+        file_type: "txt"
+        contents: "raw text"
+      - volume: /veld/output/
+        environment: out_file_dirty
+        description: "dirty lines, where each line's ratio is below the configured threshold"
+        file_type: "txt"
+        contents: "raw text"
+
+    settings:
+      - environment: min_percentage_char
+        description: "threshold above which a line is considered clean. E.g. 80 means 80% of
+          character of a line must be textual"
+        env_type: "int"
+      - environment: out_data_description
+        description: "automatic data description for generating a data veld yaml file"
+        env_type: "str" 
+      - environment: cpu_count
+        description: "number of cpu cores allocated to this processing. Defaults to maximum number
+          of available cores"
+        env_type: "int"
+      - environment: buffer_segments
+        description: "percentage of segments where processing results are persisted in between. So
+          that processing could continue should it have crashed"
+        env_type: "int"
+        default: 100
 
 services:
   veld_preprocess_clean:
@@ -11,8 +54,9 @@ services:
       in_file: null
       out_file_clean: null
       out_file_dirty: null
+      out_data_veld_yaml: null
       min_percentage_char: null
       out_data_description: null
       cpu_count: null
-      buffer_segments: null
+      buffer_segments: 100
 

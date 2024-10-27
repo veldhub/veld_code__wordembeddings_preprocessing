@@ -1,5 +1,36 @@
 x-veld:
   code:
+    description: "removes punctuation from text with spaCy pretrained models"
+    topics: 
+      - "NLP"
+      - "preprocessing"
+      - "ETL"
+
+    inputs:
+      - volume: /veld/input/
+        environment: in_txt_file
+        file_type: "txt"
+        contents: "raw text"
+
+    outputs:
+      - volume: /veld/output/
+        environment: out_txt_file 
+        file_type: "txt"
+        contents: "raw text"
+
+    settings:
+      - environment: out_data_description
+        description: "automatic data description for generating a data veld yaml file"
+        env_type: "str" 
+      - environment: cpu_count
+        description: "number of cpu cores allocated to this processing. Defaults to maximum number
+          of available cores"
+        env_type: "int"
+      - environment: buffer_segments
+        description: "percentage of segments where processing results are persisted in between. So
+          that processing could continue should it have crashed"
+        env_type: "int"
+        default: 100
 
 services:
   veld_preprocess_remove_punctuation:
@@ -11,6 +42,6 @@ services:
       in_txt_file: null
       out_txt_file: null
       cpu_count: null
-      buffer_segments: 10
+      buffer_segments: 100
       out_data_description: null
 
