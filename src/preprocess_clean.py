@@ -15,6 +15,7 @@ OUT_TMP_FOLDER_DIRTY = "/veld/output/2/dirty/"
 OUT_VELD_DATA_YAML_PATH = "/veld/output/veld_data_cleaned.yaml"
 MIN_PERCENTAGE_CHAR = float(os.getenv("min_percentage_char"))
 OUT_DATA_DESCRIPTION = os.getenv("out_data_description")
+SLEEP_DURATION = int(os.getenv("sleep_duration"))
 CPU_COUNT = os.getenv("cpu_count")
 if CPU_COUNT is None:
     CPU_COUNT = os.cpu_count()
@@ -99,7 +100,7 @@ def main():
         out_tmp_folder=OUT_TMP_FOLDER_CLEAN,
         single_line_function=process_line_clean,
         buffer_segments=BUFFER_SEGMENTS,
-        sleep_duration=60,
+        sleep_duration=SLEEP_DURATION,
     )
     multi_process(
         cpu_cores=CPU_COUNT, 
@@ -108,7 +109,7 @@ def main():
         out_tmp_folder=OUT_TMP_FOLDER_DIRTY,
         single_line_function=process_line_dirty,
         buffer_segments=BUFFER_SEGMENTS,
-        sleep_duration=60,
+        sleep_duration=SLEEP_DURATION,
     )
     write_veld_data_yaml()
 

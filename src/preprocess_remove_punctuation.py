@@ -12,6 +12,7 @@ OUT_TXT_PATH = "/veld/output/1/" + os.getenv("out_txt_file")
 OUT_TMP_FOLDER = "/veld/output/2/"
 OUT_VELD_DATA_YAML_PATH = "/veld/output/veld_data_removed_punctuation.yaml"
 OUT_DATA_DESCRIPTION = os.getenv("out_data_description")
+SLEEP_DURATION = int(os.getenv("sleep_duration"))
 CPU_COUNT = os.getenv("cpu_count")
 if CPU_COUNT is None:
     CPU_COUNT = os.cpu_count()
@@ -73,7 +74,7 @@ def main():
         out_tmp_folder=OUT_TMP_FOLDER,
         single_line_function=process_line,
         buffer_segments=BUFFER_SEGMENTS,
-        sleep_duration=60,
+        sleep_duration=SLEEP_DURATION,
     )
     write_veld_data_yaml()
 

@@ -31,6 +31,12 @@ x-veld:
           that processing could continue should it have crashed"
         env_type: "int"
         default: 100
+      - environment: sleep_duration
+        description: "number of seceonds between each multiprocess invokation, since with big data,
+          a memory race condition can occurr. To work-around this, a small waiting period in between
+          can be set with this variable."
+        env_type: "int"
+        default: 10
 
 services:
   veld_preprocess_remove_punctuation:
@@ -44,4 +50,5 @@ services:
       cpu_count: null
       buffer_segments: 100
       out_data_description: null
+      sleep_duration: 10
 
