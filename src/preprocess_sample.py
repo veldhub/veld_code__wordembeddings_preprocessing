@@ -16,13 +16,6 @@ TMP_FILE_FOLDER = "/tmp"
 SAMPLE_RANDOM_SEED = os.getenv("sample_random_seed")
 PERCENTAGE_SAMPLE = float(os.getenv("percentage_sample"))
 BUFFER_SEGMENTS = int(os.getenv("buffer_segments"))
-CPU_COUNT = os.getenv("cpu_count")
-if CPU_COUNT is None:
-    CPU_COUNT = os.cpu_count()
-else:
-    CPU_COUNT = int(CPU_COUNT)
-    if CPU_COUNT > os.cpu_count():
-        CPU_COUNT = os.cpu_count()
 
 
 def get_line_indices():
@@ -105,7 +98,6 @@ def main():
     print(f"starting at: {datetime.now()}")
     print(f"IN_FILE_PATH: {IN_FILE_PATH}")
     print(f"OUT_FILE_PATH: {OUT_FILE_PATH}")
-    print(f"CPU_COUNT: {CPU_COUNT}")
     print(f"SAMPLE_RANDOM_SEED: {SAMPLE_RANDOM_SEED}")
     print(f"PERCENTAGE_SAMPLE: {PERCENTAGE_SAMPLE}")
     print(f"BUFFER_SEGMENTS: {BUFFER_SEGMENTS}")

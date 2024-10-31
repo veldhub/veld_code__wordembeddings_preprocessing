@@ -29,10 +29,6 @@ x-veld:
       - environment: sample_random_seed
         description: "seed to make randomness stable and reproducible"
         env_type: "str"
-      - environment: cpu_count
-        description: "number of cpu cores allocated to this processing. Defaults to maximum number
-          of available cores"
-        env_type: "int"
       - environment: buffer_segments
         description: "percentage of segments where processing results are persisted in between. So
           that processing could continue should it have crashed"
@@ -51,6 +47,5 @@ services:
       out_data_description: null
       percentage_sample: null
       sample_random_seed: null
-      cpu_count: null
       buffer_segments: 100
 
