@@ -13,8 +13,11 @@ x-veld:
         contents: "raw text"
 
     outputs:
-      - volume: /veld/output/
+      - volume: /veld/output/txt/
         environment: out_txt_file 
+        file_type: "txt"
+        contents: "raw text"
+      - volume: /veld/output/tmp/
         file_type: "txt"
         contents: "raw text"
 

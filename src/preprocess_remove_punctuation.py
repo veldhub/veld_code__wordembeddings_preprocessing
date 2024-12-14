@@ -8,8 +8,8 @@ from common import multi_process
 
 
 IN_TXT_PATH = "/veld/input/" + os.getenv("in_txt_file")
-OUT_TXT_PATH = "/veld/output/1/" + os.getenv("out_txt_file")
-OUT_TMP_FOLDER = "/veld/output/2/"
+OUT_TXT_PATH = "/veld/output/txt/" + os.getenv("out_txt_file")
+OUT_TMP_FOLDER = "/veld/output/tmp/"
 OUT_VELD_DATA_YAML_PATH = "/veld/output/veld_data_removed_punctuation.yaml"
 OUT_DATA_DESCRIPTION = os.getenv("out_data_description")
 SLEEP_DURATION = int(os.getenv("sleep_duration"))
