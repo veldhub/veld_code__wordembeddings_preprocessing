@@ -40,7 +40,8 @@ def multi_process(
         print(f"process {p_id}: start")
         out_tmp_file_path = f"{out_tmp_folder}/{p_id}.txt"
         out_tmp_i_end_path = f"{out_tmp_folder}/{p_id}_i_end.txt"
-        i_buffer_list = get_segment_index_list(i_end - i_start, buffer_segments)
+        i_len = i_end - i_start
+        i_buffer_list = get_segment_index_list(i_len, buffer_segments)
         i_buffer_set = set(s[1] + i_start for s in i_buffer_list)
         if os.path.exists(out_tmp_i_end_path):
             with open(out_tmp_i_end_path, "r") as f_i_end:
@@ -55,9 +56,11 @@ def multi_process(
                         if i_line != i_start and (i_line in i_buffer_set or i_line == i_end - 1):
                             f_out.write(buffer_out_str)
                             buffer_out_str = ""
+                            i_line_rel = i_start + i_line
+                            perc_current = round(100 / i_len * i_line_rel)
                             print(
-                                f"process {p_id}: processing currently at line {i_line}, until "
-                                f"{i_end - 1}"
+                                f"process {p_id}: processing currently at {perc_current}% (line 
+                                {i_line}, until {i_end - 1})"
                             )
                             with open(out_tmp_i_end_path, "w") as f_i_end:
                                 f_i_end.write(str(i_line))
