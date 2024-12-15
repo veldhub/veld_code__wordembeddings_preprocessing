@@ -56,11 +56,11 @@ def multi_process(
                         if i_line != i_start and (i_line in i_buffer_set or i_line == i_end - 1):
                             f_out.write(buffer_out_str)
                             buffer_out_str = ""
-                            i_line_rel = i_start + i_line
+                            i_line_rel = i_line - i_start
                             perc_current = round(100 / i_len * i_line_rel)
                             print(
-                                f"process {p_id}: processing currently at {perc_current}% (line 
-                                {i_line}, until {i_end - 1})"
+                                f"process {p_id}: currently at {perc_current}% (line " 
+                                f"{i_line}, until {i_end - 1})"
                             )
                             with open(out_tmp_i_end_path, "w") as f_i_end:
                                 f_i_end.write(str(i_line))
@@ -80,6 +80,9 @@ def multi_process(
 
     def multi_process_main():
         print(f"start multiprocessing, at {datetime.now()}")
+        print("segmenting input file into slices to be assigned to cpu cores respectively.")
+        if not os.path.exists(out_tmp_folder):
+            os.mkdir(out_tmp_folder)
         segment_index_list = get_segment_index_list(get_num_lines_of_file(), cpu_cores)
         process_list = []
         for p_id, i_start_end_tuple in enumerate(segment_index_list):
@@ -94,6 +97,10 @@ def multi_process(
             process_list.append(process)
         for process in process_list:
             process.join()
+        print(
+            "Done with producing temporary file segments, merging them together into single output "
+            "file."
+        )
         join_tmp_files()
         print(f"done with multiprocessing, at {datetime.now()}")
 
