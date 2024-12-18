@@ -1,27 +1,27 @@
 x-veld:
   code:
     description: "makes entire text lowercase"
-    topics: 
+    topic: 
       - "NLP"
       - "preprocessing"
       - "ETL"
 
-    inputs:
+    input:
       - volume: /veld/input/
-        environment: in_txt_file
+        environment_var: in_txt_file
         file_type: "txt"
-        contents: "raw text"
+        content: "raw text"
 
-    outputs:
+    output:
       - volume: /veld/output/
-        environment: out_txt_file 
+        environment_var: out_txt_file 
         file_type: "txt"
-        contents: "raw text"
+        content: "raw text"
 
-    settings:
-      - environment: out_data_description
+    config:
+      - environment_var: out_data_description
         description: "automatic data description for generating a data veld yaml file"
-        env_type: "str" 
+        var_type: "str" 
 
 services:
   veld_preprocess_lowercase:

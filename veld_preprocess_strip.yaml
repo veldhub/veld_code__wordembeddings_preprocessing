@@ -1,32 +1,32 @@
 x-veld:
   code:
     description: "removes all lines before and after given line numbers"
-    topics: 
+    topic: 
       - "NLP"
       - "preprocessing"
       - "ETL"
 
-    inputs:
+    input:
       - volume: /veld/input/
-        environment: in_file
+        environment_var: in_file
         file_type: "txt"
-        contents: "raw text"
+        content: "raw text"
 
-    outputs:
+    output:
       - volume: /veld/output/
-        environment: out_file
+        environment_var: out_file
         file_type: "txt"
-        contents: "raw text"
+        content: "raw text"
 
-    settings:
-      - environment: line_start
+    config:
+      - environment_var: line_start
         description: "line number before which lines will be stripped away. E.g. line_start=50
           removes lines from 1-49"
-        env_type: "int" 
-      - environment: line_end
+        var_type: "int" 
+      - environment_var: line_end
         description: "line number after which lines will be stripped away. E.g. line_end=100 removes
           lines from 101-end"
-        env_type: "int" 
+        var_type: "int" 
 
 services:
   veld_preprocess_strip:
