@@ -3,7 +3,7 @@ x-veld:
     description: "removes punctuation from text with spaCy pretrained models"
     topic: 
       - "NLP"
-      - "preprocessing"
+      - "Preprocessing"
       - "ETL"
 
     input:

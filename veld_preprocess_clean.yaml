@@ -5,7 +5,7 @@ x-veld:
       file."
     topic: 
       - "NLP"
-      - "preprocessing"
+      - "Preprocessing"
       - "ETL"
 
     input:

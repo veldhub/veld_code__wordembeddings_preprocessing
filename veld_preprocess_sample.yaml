@@ -4,7 +4,7 @@ x-veld:
       too"
     topic: 
       - "NLP"
-      - "preprocessing"
+      - "Preprocessing"
       - "ETL"
 
     input:

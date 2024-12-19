@@ -3,7 +3,7 @@ x-veld:
     description: "makes entire text lowercase"
     topic: 
       - "NLP"
-      - "preprocessing"
+      - "Preprocessing"
       - "ETL"
 
     input:

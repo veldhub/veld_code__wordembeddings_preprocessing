@@ -3,7 +3,7 @@ x-veld:
     description: "removes all lines before and after given line numbers"
     topic: 
       - "NLP"
-      - "preprocessing"
+      - "Preprocessing"
       - "ETL"
 
     input:
