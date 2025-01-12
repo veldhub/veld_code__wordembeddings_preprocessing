@@ -1,7 +1,7 @@
 x-veld:
   code:
-    description: "Removes lines that don't reach a threshold regarding the ratio of textual content
-      to non-textual (numbers, special characters) content. Splits output into clean and dirty
+    description: "Removes lines that don't reach a threshold regarding the ratio of textual content 
+      to non-textual (numbers, special characters) content. Splits output into clean and dirty 
       file."
     topic: 
       - "NLP"
