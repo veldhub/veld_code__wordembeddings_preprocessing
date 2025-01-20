@@ -1,4 +1,4 @@
-# veld_code__wordembeddings_preprocessing
+# ![veld chain](https://raw.githubusercontent.com/veldhub/.github/refs/heads/main/images/symbol_V_letter.png) veld_code__wordembeddings_preprocessing
 
 This repo contains [code velds](https://zenodo.org/records/13322913) encapsulating preprocessing 
 for training of wordembeddings.
