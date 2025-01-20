@@ -1,7 +1,7 @@
 # veld_code__wordembeddings_preprocessing
 
 This repo contains [code velds](https://zenodo.org/records/13322913) encapsulating preprocessing 
-for training wordembeddings.
+for training of wordembeddings.
 
 ## requirements
 
