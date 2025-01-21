@@ -33,7 +33,7 @@ services:
     build: .
     volumes:
       - ./src/:/veld/code/:z
-    command: /veld/code/preprocess_strip.sh
+    command: bash /veld/code/preprocess_strip.sh
     environment:
       in_file: null
       out_file: null
