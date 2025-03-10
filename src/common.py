@@ -6,6 +6,15 @@ from multiprocessing import Process
 from time import sleep
 
 
+def read_args():
+    pass
+
+
+# TODO
+def write_veld_data_yaml():
+    pass
+
+
 def multi_process(
     cpu_cores, 
     in_file_path, 
