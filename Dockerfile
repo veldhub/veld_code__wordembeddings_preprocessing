@@ -8,5 +8,6 @@ RUN pip install PyYAML==6.0.2
 RUN pip install spacy==3.7.6
 RUN python3 -m spacy download de_core_news_lg 
 RUN echo "alias python=python3" >> /root/.bashrc
+RUN echo "alias ipdb='python -m ipdb'" >> /root/.bashrc
 WORKDIR /veld/code/
 
