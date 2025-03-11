@@ -13,18 +13,14 @@ x-veld:
         content: "raw text"
 
     output:
-      - volume: /veld/output/data/
-        environment_var: out_txt_file
+      - volume: /veld/output/
+        environment_var: out_txt_file 
         file_type: "txt"
         content: "raw text"
-      - volume: /veld/output/metadata/
-        environment_var: out_metdata_file
-        file_type: "yaml"
-        content: "metadata"
 
     config:
       - environment_var: out_data_description
-        description: "textual data description used as output to the metadata veld yaml file"
+        description: "automatic data description for generating a data veld yaml file"
         var_type: "str" 
 
 services:
@@ -36,6 +32,5 @@ services:
     environment:
       in_txt_file: null
       out_txt_file: null
-      out_metdata_file: null
       out_data_description: null
 
